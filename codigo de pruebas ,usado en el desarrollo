@@ -1,0 +1,277 @@
+void grafo::insertar_arista()
+{
+    int cantidadAristas = 0, peso = 0;
+    char v1, v2;
+
+    cout << "ingresa la cantidad de aristas a usar : " << endl;
+    cout << "(no ingresar mas de 15 aristas)" << endl;
+    cin >> cantidadAristas;
+
+    // !(cin >> cantidadAristas), valida el tipo de dato
+    while (cantidadAristas < 0 || cantidadAristas > 15 || !(cin >> cantidadAristas))
+    {
+        cout << "valor incorrecto" << endl;
+        cout << "ingresa nuevamente la cantidad de aristas a usar : " << endl;
+        cout << "(no ingresar mas de 15 aristas)" << endl;
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin >> cantidadAristas;
+    }
+
+    while (contador < cantidadAristas)
+    {
+        cout << " Vertices : " << endl;
+        for (size_t i = 0; i < V.size(); i++)
+        {
+            cout << i << " : " << V.at(i) << endl;
+        }
+
+        cout << "elegi la opcion del vertice 1 " << endl;
+        cin >> v1;
+        cout << "elegi la opcion del vertice 2 " << endl;
+        cin >> v2;
+        cout << "ingresa el peso de la arista o bucle(entre 0 y 20) " << endl;
+        cin >> peso;
+
+        // valida que sean opciones existentes
+        // valida el tipo de dato ingresado
+        while (v1 < 0 || v1 > V.size() || v2 < 0 || v2 > V.size() || !(cin >> v1) || !(cin >> v2))
+        {
+            cout << "opciones incorrectas,volve a ingresarlas " << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+            cout << " Vertices : " << endl;
+            for (size_t i = 0; i < V.size(); i++)
+            {
+                cout << i << " : " << V.at(i) << endl;
+            }
+
+            cout << "elegi la opcion del vertice 1 " << endl;
+            cin >> v1;
+            cout << "elegi la opcion del vertice 2 " << endl;
+            cin >> v2;
+        }
+
+        // valida el peso ingresado y su tipo de dato
+        while (peso < 0 || peso > 20 || !(cin >> peso))
+        {
+            cout << "valor del peso incorrecto" << endl;
+            cout << "ingresa nuevamente el peso de la arista o bucle(entre 0 y 20) " << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cin >> peso;
+        }
+
+        // no puede haber mas de 4 aristas entre dos vertices
+        if (aristasSalientesDelVertice[v1] > 4)
+        {
+            cout << "el vertice " << v1 << " ya contiene 4 aristas salientes" << endl;
+            cout << "no es posible agregar esta arista" << endl;
+        }
+        else if (aristasSalientesDelVertice[v2] > 4)
+        {
+            cout << "el vertice " << v2 << " ya contiene 4 aristas salientes" << endl;
+            cout << "no es posible agregar esta arista" << endl;
+        }
+        // valida que no haya mas de 3 bucles en el mismo vertice
+        else if (v1 == v2 && (aristasSalientesDelVertice[v1] > 3 || aristasSalientesDelVertice[v2] > 3))
+        {
+            cout << "cantidad de bucles en el mismo vertice supero el limite" << endl;
+            cout << "no es posible agregar esta arista" << endl;
+        }
+        else
+        {
+            E.push_back(arista{{v1, v2}, peso}); // ingresa la arista al vector con exito
+            cout << "arista ingresada con exito : " << E.at(contador).first.first << " " << E.at(contador).first.second << " peso :" << E.at(contador).second << endl;
+
+            // incrementa la arista saliente de cada vertice en 1 unidad
+            aristasSalientesDelVertice[v1]++;
+            aristasSalientesDelVertice[v2]++;
+
+            contador++;
+            cout << "cantidad de aristas ingresadas : " << contador << endl;
+        }
+    }
+}
+
+
+
+----------------------------------------------------------------------
+
+
+
+/* test de la cola de prioridad
+    // TEST
+    // Creamos una copia de la cola original para no modificarla.
+    arbol copia = this->grafo_ordenado;
+
+    // Mientras la copia de la cola no esté vacía, extraemos elementos y los imprimimos.
+    while (!copia.empty())
+    {
+        arista elemento = copia.top(); // Obtenemos el elemento en la cima de la cola.
+
+        std::cout << "Origen: " << elemento.first.first << ", Destino: " << elemento.first.second << ", Peso: " << elemento.second << std::endl;
+
+        copia.pop(); // Eliminamos el elemento de la cima.
+    }
+    */
+
+----------------------------------------------------------------------
+
+
+// test -> combina() ,  printCE()
+    /*
+    cout << "conjunto b : " << endl;
+
+    g1.printCE('b');
+
+    cout << "conjunto g : " << endl;
+
+    g1.printCE('g');
+
+    cout << "combina g y b" << endl;
+
+    g1.combina('b', 'g');
+
+    cout << "se imprime g" << endl;
+
+    g1.printCE('g');
+    */
+
+
+
+
+----------------------------------------------------------------------
+
+
+
+ // TEST , se crean conjuntos manualmente,con propositos de prueba
+    // Instanciamos un objeto de tipo conjunto_CE
+    conjunto_CE ce;
+
+    // Utilizamos el objeto instanciado
+    ce.nombres['a'] = std::make_pair('a', 'c');
+    ce.nombres['c'] = std::make_pair('c', 'f');
+    ce.nombres['f'] = std::make_pair('f', 'h');
+    ce.nombres['h'] = std::make_pair('h', '0');
+
+    ce.encabezados['a'] = std::make_pair(5, 'a');
+
+    // Utilizamos el objeto instanciado
+    ce.nombres['b'] = std::make_pair('b', 'd');
+    ce.nombres['d'] = std::make_pair('d', 'e');
+    ce.nombres['e'] = std::make_pair('e', '0');
+
+    ce.encabezados['b'] = std::make_pair(4, 'b');
+
+    // Utilizamos el objeto instanciado
+    ce.nombres['g'] = std::make_pair('g', 'k');
+    ce.nombres['k'] = std::make_pair('k', 'l');
+    ce.nombres['l'] = std::make_pair('l', '0');
+
+    ce.encabezados['g'] = std::make_pair(4, 'g');
+
+    g1.setCE(ce);
+
+    g1.encuentra('e');
+
+
+
+
+----------------------------------------------------------------------
+
+
+
+// imprime todos los vertices del grafo,
+    vector<char> vertices = g1.getVertices();
+
+    for (size_t i = 0; i < vertices.size(); i++)
+    {
+
+        cout << vertices.at(i) << endl;
+    }
+    
+    
+    
+    
+----------------------------------------------------------------------    
+    
+    
+    
+/* TESTS
+    // inicia componentes
+    g1.inicial('a', 'a');
+    g1.inicial('b', 'b');
+    g1.inicial('c', 'c');
+    g1.inicial('d', 'd');
+    g1.inicial('f', 'f');
+    g1.inicial('g', 'g');
+
+    g1.combina('a', 'b');
+
+    g1.getCE().nombres.find('a');
+
+    cout << g1.getCE().encabezados.find('b')->second.first << endl;
+
+    g1.combina('a', 'c');
+
+    cout << g1.getCE().encabezados.find('c')->second.first << endl;
+    */
+    // inserta el conjunto de aristas en la cola de prioridad,
+    // g1.inserta();
+
+    /*
+    COLA DE PRIORIDAD RESULTANTE DEL GRAFO
+
+    Origen: a, Destino: b, Peso: 1  **  combina(a,b) -> conjunto b : (b,a,0)
+
+    Origen: a, Destino: c, Peso: 1  **  busca a , -> conj b,   , combina(a,c) -> conjunto b : (c,b,a)
+
+    Origen: c, Destino: g, Peso: 1  **  combina(c,g) -> conjunto b : (c,b,a,g)
+
+    Origen: a, Destino: g, Peso: 1  **
+
+    Origen: a, Destino: f, Peso: 2  **
+
+    Origen: b, Destino: g, Peso: 2
+
+    Origen: b, Destino: f, Peso: 3
+
+    Origen: b, Destino: c, Peso: 3
+
+    Origen: d, Destino: f, Peso: 3
+
+    Origen: c, Destino: d, Peso: 4
+
+    Origen: c, Destino: d, Peso: 6
+
+    */    
+    
+    
+----------------------------------------------------------------------    
+    
+    
+// helper method , para testear el contenido de cada conjunto x
+void grafo::printCE(const char &v)
+{
+
+    conjunto_CE ce = this->getCE();
+
+    char i = ce.encabezados.find(v)->second.second;
+
+    auto it = ce.nombres.find(i);
+
+    // Mostrando el contenido del mapa
+    while (it->second.second != '0')
+    {
+        std::cout << it->second.first << ": " << it->second.second << std::endl;
+
+        char sig = it->second.second;
+
+        it = ce.nombres.find(sig);
+    }
+}    
+    
+    
+
